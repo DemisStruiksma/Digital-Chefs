@@ -1,22 +1,48 @@
 import React from 'react';
 import './App.css';
+import axios from 'axios';
+import { useState } from 'react'
 
 function App() {
+  const [image, setImage] = useState("");
+  const clientId = "0d54d7bf8f81c9ee80a75d9e1263fbb6b8267fad9d908e597b9f7c4f6bcdee23";
+  const [result, setResult] = useState([]);
+
+  const handleChange = (e) => {
+    setImage(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const url = "https://api.unsplash.com/search/photos?page=1&query=" + image + "&client_id=" + clientId;
+    
+    axios.get(url).then((response) => {
+      console.log(response);
+      setResult(response.data.results);
+    });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <form>
+        <input onChange={handleChange} type="text"  placeholder="Search for images"/>
+        <button onClick={handleSubmit} type="submit">Search</button>
+      </form>
+
+      <ul>
+        {result.map((image) => (
+          <>
+              <li key={image.id}>
+                <figure>
+                  <img
+                    alt={image.alt_description}
+                    src={image.urls.thumb}
+                  />
+                </figure>
+              </li>  
+          </>
+        ))}
+      </ul>
     </div>
   );
 }
