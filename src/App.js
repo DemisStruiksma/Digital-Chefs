@@ -16,24 +16,51 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const url = "https://api.unsplash.com/search/photos?page=1&query=" + image + "&client_id=" + clientId;
+    if(image.length > 1) {
+      const url = "https://api.unsplash.com/search/photos?page=1&query=" + image + "&client_id=" + clientId;
     
-    axios.get(url).then((response) => {
-      console.log(response);
-      setResult(response.data.results);
-    });
+      axios.get(url).then((response) => {
+        setResult(response.data.results);
+
+        if(response.data.results.length < 1) {
+          alert('No results for this search query')
+        }
+      });
+    } else {
+      alert('Please fill in the search field')
+    }   
   };
 
   return (
-    <div>
-      <form>
-        <input onChange={handleChange} type="text"  placeholder="Search for images"/>
-        <button onClick={handleSubmit} type="submit">Search</button>
+    <div className="container mx-auto px-10 pt-10">
+
+      <form className="flex items-center justify-center space-x-5">
+        <div className="flex border-2 border-blue-500 rounded">
+            <input 
+              onChange={handleChange} 
+              type="text" className="px-4 py-2 w-80" 
+              placeholder="Search for an image..." 
+            />
+
+            <button 
+              onClick={handleSubmit} 
+              className="flex items-center justify-center px-4 border-l"
+            >
+                <svg className="w-6 h-6 text-gray-600" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24">
+                    <path
+                        d="M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z" />
+                </svg>
+            </button>
+        </div>
       </form>
 
-      <ul>
+      <ul className="container grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mx-auto mt-10">
         {result.map((image) => (
-            <li key={image.id}>
+            <li 
+              key={image.id} 
+              className="w-full rounded outline outline-offset-2 outline-1"
+            >
               <ModalImage
                 small={image.urls.thumb}
                 large={image.urls.full}
@@ -43,6 +70,7 @@ function App() {
           )
         )}
       </ul>
+
     </div>
   );
 }
