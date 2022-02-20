@@ -1,7 +1,9 @@
 import React from 'react';
 import './App.css';
 import axios from 'axios';
-import { useState } from 'react'
+import { useState } from 'react';
+import ModalImage from "react-modal-image";
+
 
 function App() {
   const [image, setImage] = useState("");
@@ -31,17 +33,15 @@ function App() {
 
       <ul>
         {result.map((image) => (
-          <>
-              <li key={image.id}>
-                <figure>
-                  <img
-                    alt={image.alt_description}
-                    src={image.urls.thumb}
-                  />
-                </figure>
-              </li>  
-          </>
-        ))}
+            <li key={image.id}>
+              <ModalImage
+                small={image.urls.thumb}
+                large={image.urls.full}
+                alt={image.alt_description}
+              />
+            </li>
+          )
+        )}
       </ul>
     </div>
   );
